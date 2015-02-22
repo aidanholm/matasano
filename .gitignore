@@ -6,3 +6,5 @@
 1.3/single_byte_xor
 1.4/nimcache
 1.4/detect_single_byte_xor
+1.5/nimcache
+1.5/repeating_key_xor
