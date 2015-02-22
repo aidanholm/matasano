@@ -1,4 +1,4 @@
-single_byte_xor: single_byte_xor.nim ../1.1/hex.nim
+single_byte_xor: single_byte_xor.nim ../util/hex.nim
 	nim compile single_byte_xor.nim
 
 clean:

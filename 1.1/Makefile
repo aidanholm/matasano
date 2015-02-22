@@ -1,4 +1,4 @@
-hex_to_base64: hex_to_base64.nim hex.nim base64.nim
+hex_to_base64: hex_to_base64.nim ../util/hex.nim ../util/base64.nim
 	nim compile hex_to_base64.nim
 
 clean:
