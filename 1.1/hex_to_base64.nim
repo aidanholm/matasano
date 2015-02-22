@@ -1,4 +1,5 @@
-include hex, base64
+from "../util/hex" import raw_from_hex
+from "../util/base64" import base64_from_raw
 
 var raw = raw_from_hex(readLine(stdin))
 if raw != nil:

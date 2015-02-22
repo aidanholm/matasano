@@ -1,4 +1,4 @@
-include ../1.1/hex
+from "../util/hex" import raw_from_hex
 
 proc score_english(buf: string): float =
     var score : float = 0;

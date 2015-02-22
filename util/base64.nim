@@ -1,4 +1,4 @@
-proc base64_char(num: int): char =
+proc base64_char *(num: int): char =
     return case num:
         of  0..25: chr(num+ord('A'))
         of 26..51: chr(num-26+ord('a'))
@@ -8,7 +8,7 @@ proc base64_char(num: int): char =
         else:
             chr(0)
 
-proc base64_from_raw(raw: string): string =
+proc base64_from_raw *(raw: string): string =
     var result = ""
     for i in countup(0, len(raw)-1, 3):
         var bytes : array[0..2, range[0..255]]

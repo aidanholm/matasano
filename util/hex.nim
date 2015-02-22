@@ -1,4 +1,4 @@
-proc raw_from_hex(hex: string): string =
+proc raw_from_hex *(hex: string): string =
     var result = ""
     if len(hex) mod 2 != 0:
         return nil
@@ -18,7 +18,7 @@ proc raw_from_hex(hex: string): string =
         add(result, chr(decimal))
     return result
 
-proc hex_from_raw(raw: string): string =
+proc hex_from_raw *(raw: string): string =
     var result = ""
     for i in countup(0, len(raw)-1):
         var chars = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']

@@ -1,4 +1,4 @@
-include ../1.1/hex
+from "../util/hex" import raw_from_hex, hex_from_raw
 
 proc buffer_xor(buf_a: string, buf_b: string): string =
     var result = ""
