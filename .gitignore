@@ -4,3 +4,5 @@
 1.2/buffer_xor
 1.3/nimcache
 1.3/single_byte_xor
+1.4/nimcache
+1.4/detect_single_byte_xor
