@@ -8,3 +8,5 @@
 1.4/detect_single_byte_xor
 1.5/nimcache
 1.5/repeating_key_xor
+1.6/nimcache
+1.6/crack_repeating_key_xor
