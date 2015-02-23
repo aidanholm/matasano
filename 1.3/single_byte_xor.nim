@@ -1,4 +1,5 @@
 from "../util/hex" import raw_from_hex
+from strutils import find
 
 proc score_english *(buf: string): float =
     var score : float = 0;
@@ -14,8 +15,15 @@ proc score_english *(buf: string): float =
             of 'h': score += 0.25
             of 'r': score += 0.20
             of 'd': score += 0.15
-            of ' ': score += 1
+            of ' ': score += 0.5
             else:   score += 0.0
+    var wordlist = ["the ", "of ", "to ", "and ", "a ", "in ", "is ", "it ", "you ", "that "]
+    var suffixes = ["ing ", "e's ", "n's ", "r's ", "t's ", "ers ", "s's ", "y's ", "ess ", "ion "]
+    for i in countup(0, len(wordlist)-1):
+        if buf.find(wordlist[i]) != -1:
+            score += 0.8
+        if buf.find(suffixes[i]) != -1:
+            score += 0.8
     return score/(float)len(buf)
 
 proc buffer_xor_byte *(buf_a: string, byte: char): string =
