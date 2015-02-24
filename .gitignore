@@ -12,3 +12,5 @@
 1.6/crack_repeating_key_xor
 1.7/nimcache
 1.7/aes_ecb
+1.8/nimcache
+1.8/detect_aes_ecb
