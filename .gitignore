@@ -19,5 +19,3 @@
 2.1/pad_pkcs7
 2.2/nimcache
 2.2/aes_cbc
-2.3/nimcache
-2.3/ecb_cbc_oracle
