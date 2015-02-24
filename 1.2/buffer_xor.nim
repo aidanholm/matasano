@@ -1,12 +1,5 @@
 from "../util/hex" import raw_from_hex, hex_from_raw
-
-proc buffer_xor(buf_a: string, buf_b: string): string =
-    var result = ""
-    if len(buf_a) != len(buf_b):
-        return nil
-    for i in countup(0, len(buf_a)-1):
-        add(result, chr(ord(buf_a[i]) xor ord(buf_b[i])))
-    return result
+from "../util/buffer" import buffer_xor
 
 var line_a = raw_from_hex(readLine(stdin))
 var line_b = raw_from_hex(readLine(stdin))
