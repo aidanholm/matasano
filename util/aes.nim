@@ -1,3 +1,5 @@
+from buffer import buffer_xor
+
 proc aes_sbox(byte: char): char =
     var sbox = [
         0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
@@ -217,5 +219,34 @@ proc aes_ecb_decrypt *(ciphertext: string, key: string): string =
     for i in countup(0, ciphertext.len()-1, 16):
         var blk = aes_decrypt_block(ciphertext[i..i+15], keys)
         result.add(blk)
+    assert(ciphertext.len() == result.len())
+    return result
+
+proc aes_cbc_encrypt *(plaintext: string, key: string, iv: string): string =
+    assert(plaintext.len() mod 16 == 0)
+    assert(key.len() == 16)
+    assert(iv.len() == 16)
+    result = ""
+    var keys = aes_expand_key(key)
+    var prev_blk = iv
+    for i in countup(0, plaintext.len()-1, 16):
+        var sum = buffer_xor(plaintext[i..i+15], prev_blk)
+        prev_blk = aes_encrypt_block(sum, keys)
+        result.add(prev_blk)
+    assert(plaintext.len() == result.len())
+    return result
+
+proc aes_cbc_decrypt *(ciphertext: string, key: string, iv: string): string =
+    assert(ciphertext.len() mod 16 == 0)
+    assert(key.len() == 16)
+    assert(iv.len() == 16)
+    result = ""
+    var keys = aes_expand_key(key)
+    var prev_blk = iv
+    for i in countup(0, ciphertext.len()-1, 16):
+        var blk = aes_decrypt_block(ciphertext[i..i+15], keys)
+        var sum = buffer_xor(blk, prev_blk)
+        prev_blk = ciphertext[i..i+15]
+        result.add(sum)
     assert(ciphertext.len() == result.len())
     return result
