@@ -1,3 +1,4 @@
+from algorithm import sort
 from buffer import buffer_xor
 from math import random
 
@@ -256,4 +257,22 @@ proc aes_random_key *(): string =
     var result = newString(16)
     for i in 0..15:
         result[i] = chr(random(256))
+    return result
+
+proc detect_aes_ecb *(buf: string): float =
+    if buf.len mod 16 != 0:
+        return 0.0
+
+    var num_blocks = buf.len div 16
+    var blocks = newSeq[string](num_blocks)
+    for i in 0 .. num_blocks-1:
+        blocks[i] = buf[i*16..i*16+15]
+    blocks.sort(proc (x,y: string): int = return cmp(x, y))
+
+    var result = 0.0
+    for i in 1..num_blocks-1:
+        if blocks[i] == blocks[i-1]:
+            result += 1.0
+    result /= float(num_blocks)
+
     return result
