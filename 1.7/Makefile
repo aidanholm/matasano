@@ -1,4 +1,4 @@
-aes_ecb: aes_ecb.nim ../util/base64.nim
+aes_ecb: aes_ecb.nim ../util/aes.nim ../util/base64.nim
 	nim compile aes_ecb.nim
 
 clean:
