@@ -1,4 +1,5 @@
 from buffer import buffer_xor
+from math import random
 
 proc aes_sbox(byte: char): char =
     var sbox = [
@@ -249,4 +250,10 @@ proc aes_cbc_decrypt *(ciphertext: string, key: string, iv: string): string =
         prev_blk = ciphertext[i..i+15]
         result.add(sum)
     assert(ciphertext.len() == result.len())
+    return result
+
+proc aes_random_key *(): string =
+    var result = newString(16)
+    for i in 0..15:
+        result[i] = chr(random(256))
     return result
