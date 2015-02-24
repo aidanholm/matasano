@@ -40,9 +40,33 @@ proc aes_inv_sbox(byte: char): char =
     ]
     return chr(sbox[ord(byte)])
 
+proc aes_sub_bytes(blk: var string) =
+    for i in 0..15:
+        blk[i] = aes_sbox(blk[i])
+
 proc aes_inv_sub_bytes(blk: var string) =
     for i in 0..15:
         blk[i] = aes_inv_sbox(blk[i])
+
+proc aes_shift_row(blk: var string) =
+    var tmp = blk[1]
+    blk[1]  = blk[5]
+    blk[5]  = blk[9]
+    blk[9]  = blk[13]
+    blk[13] = tmp
+
+    tmp     = blk[2]
+    blk[2]  = blk[10]
+    blk[10] = tmp
+    tmp     = blk[6]
+    blk[6]  = blk[14]
+    blk[14] = tmp
+
+    tmp     = blk[3]
+    blk[3]  = blk[15]
+    blk[15] = blk[11]
+    blk[11] = blk[7]
+    blk[7]  = tmp
 
 proc aes_inv_shift_row(blk: var string) =
     var tmp = blk[1]
@@ -95,10 +119,9 @@ proc aes_galois_multiply(x, y: int): int =
     assert(p >= 0 and p <= 0xff)
     return p
 
-proc aes_inv_mix_cols(blk: var string) =
+proc aes_galois_mat_multiply(blk: var string, mat: array[0..15, int]) =
     assert(blk.len() == 16)
     var new_block: array[0..15, int]
-    const mat = [14,9,13,11,11,14,9,13,13,11,14,9,9,13,11,14]
     for x in 0..3:
         for y in 0..3:
             new_block[x*4+y] = 0
@@ -107,6 +130,33 @@ proc aes_inv_mix_cols(blk: var string) =
                 new_block[x*4+y] = new_block[x*4+y] xor gp
     for i in 0..15:
         blk[i] = chr(new_block[i])
+
+proc aes_mix_cols(blk: var string) =
+    const mat = [2,1,1,3,3,2,1,1,1,3,2,1,1,1,3,2]
+    aes_galois_mat_multiply(blk, mat)
+
+proc aes_inv_mix_cols(blk: var string) =
+    const mat = [14,9,13,11,11,14,9,13,13,11,14,9,9,13,11,14]
+    aes_galois_mat_multiply(blk, mat)
+
+proc aes_encrypt_block(bk: string, keys:string): string =
+    assert(bk.len() == 16)
+    assert(keys.len() == 16*11)
+    var blk = bk
+
+    aes_add_round_key(blk, keys[0..15])
+
+    for i in 1 .. 9:
+        aes_sub_bytes(blk)
+        aes_shift_row(blk)
+        aes_mix_cols(blk)
+        aes_add_round_key(blk, keys[16*i..16*i+15])
+
+    aes_sub_bytes(blk)
+    aes_shift_row(blk)
+    aes_add_round_key(blk, keys[16*10..16*10+15])
+
+    return blk
 
 proc aes_decrypt_block(bk: string, keys:string): string =
     assert(bk.len() == 16)
@@ -147,6 +197,17 @@ proc aes_expand_key(key: string): string =
             for ch in column:
                 k.add(ch)
     return k
+
+proc aes_ecb_encrypt *(plaintext: string, key: string): string =
+    assert(plaintext.len() mod 16 == 0)
+    assert(key.len() == 16)
+    result = ""
+    var keys = aes_expand_key(key)
+    for i in countup(0, plaintext.len()-1, 16):
+        var blk = aes_encrypt_block(plaintext[i..i+15], keys)
+        result.add(blk)
+    assert(plaintext.len() == result.len())
+    return result
 
 proc aes_ecb_decrypt *(ciphertext: string, key: string): string =
     assert(ciphertext.len() mod 16 == 0)
