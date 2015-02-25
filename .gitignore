@@ -21,3 +21,5 @@
 2.2/aes_cbc
 2.4/nimcache
 2.4/crack_ecb_simple
+2.5/nimcache
+2.5/ecb_cut_and_paste
