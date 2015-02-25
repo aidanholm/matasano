@@ -25,3 +25,5 @@
 2.5/ecb_cut_and_paste
 2.6/nimcache
 2.6/crack_ecb_hard
+2.8/nimcache
+2.8/cbc_bitflip
