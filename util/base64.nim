@@ -50,16 +50,19 @@ proc raw_from_base64 *(b64: string): string =
 
     var i = 0
     while i < len(b64)-3:
+        # Ignore newline characters
         if b64[i] == "\n"[0] or b64[i] == "\r"[0]:
             i += 1
             continue
 
+        # Take a 4-tuple of base64 characters and convert to a 3-tuple
         var q = [int_from_base64_char(b64[i]), int_from_base64_char(b64[i+1]),
         int_from_base64_char(b64[i+2]), int_from_base64_char(b64[i+3])]
         var value = q[0] shl 18 or q[1] shl 12 or q[2] shl 6 or q[3]
         var triple = [value shr 16, value shr 8 and 0xff, value and 0xff]
         i += 4
 
+        # Add this to the result, discarding padding
         result.add(chr(triple[0]))
         if result.len < pt_len: result.add(chr(triple[1]))
         if result.len < pt_len: result.add(chr(triple[2]))
