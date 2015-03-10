@@ -30,3 +30,5 @@
 
 3.1/nimcache
 3.1/cbc_padding_oracle
+3.2/nimcache
+3.2/aes_ctr

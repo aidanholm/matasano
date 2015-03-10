@@ -253,6 +253,29 @@ proc aes_cbc_decrypt *(ciphertext: string, key: string, iv: string): string =
     assert(ciphertext.len() == result.len())
     return result
 
+from strutils import intToStr
+
+proc aes_ctr_crypt *(buf: string, key: string, nonce: uint64): string =
+    assert(key.len() == 16)
+    var keys = aes_expand_key(key)
+    var blk_ctr : uint64
+    var result = ""
+    blk_ctr = 0
+    for i in countup(0, buf.len()-1, 16):
+        var ctr = ""
+        for ch in cast[array[0..7,char]](nonce):
+            ctr.add(ch)
+        assert(ctr.len == 8)
+        for ch in cast[array[0..7,char]](blk_ctr):
+            ctr.add(ch)
+        assert(ctr.len == 16)
+        var key = aes_encrypt_block(ctr, keys)
+        var last_i = min(16, buf.len-i)-1
+        var res = buffer_xor(buf[i..i+last_i], key[0..last_i])
+        result.add(res)
+        blk_ctr += 1
+    return result
+
 proc aes_random_key *(): string =
     var result = newString(16)
     for i in 0..15:
