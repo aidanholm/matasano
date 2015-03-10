@@ -1,3 +1,5 @@
+from strutils import endsWith
+
 proc base64_char_from_int *(num: int): char =
     return case num:
         of  0..25: chr(num+ord('A'))
@@ -43,6 +45,9 @@ proc base64_from_raw *(raw: string): string =
 
 proc raw_from_base64 *(b64: string): string =
     var result = ""
+    var pad_len = if b64.endsWith("=="): 2 elif b64.endsWith("="): 1 else: 0
+    var pt_len = b64.len div 4 * 3 - pad_len
+
     var i = 0
     while i < len(b64)-3:
         if b64[i] == "\n"[0] or b64[i] == "\r"[0]:
@@ -53,9 +58,10 @@ proc raw_from_base64 *(b64: string): string =
         int_from_base64_char(b64[i+2]), int_from_base64_char(b64[i+3])]
         var value = q[0] shl 18 or q[1] shl 12 or q[2] shl 6 or q[3]
         var triple = [value shr 16, value shr 8 and 0xff, value and 0xff]
-        result.add(chr(triple[0]))
-        result.add(chr(triple[1]))
-        result.add(chr(triple[2]))
         i += 4
+
+        result.add(chr(triple[0]))
+        if result.len < pt_len: result.add(chr(triple[1]))
+        if result.len < pt_len: result.add(chr(triple[2]))
 
     return result
