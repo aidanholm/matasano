@@ -1,0 +1,13 @@
+Matasano Crypto Challenge Solutions
+-----------------------------------
+
+These are my solutions to the Matasano cryptography challenge questions
+(available at http://cryptopals.com/); all work is my own.
+
+This endeavour was used as a means by which to learn the Nim programming
+language, which explains some inconsistencies in code style.
+
+Complete:    Sets 1, 2
+In progress: Set 3
+Unattempted: Sets 4, 5, 6, 7
+Skipped:     Problem 19 "Break fixed-nonce CTR mode using substitions"
